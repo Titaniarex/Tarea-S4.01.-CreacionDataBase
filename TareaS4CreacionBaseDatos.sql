@@ -4,7 +4,7 @@ CREATE DATABASE VentasBD;
 USE VentasBD; 
 -- Creando una tabla con todos los ususarios para evitar problemas con la FK en la tabla Transactions
 CREATE TABLE D_Users (
-id INT NOT NULL,
+id INT,
 name VARCHAR(100),
 surname VARCHAR(100),
 phone VARCHAR(150),
@@ -20,7 +20,7 @@ PRIMARY KEY (id)
 USE VentasBD; 
 -- creando tabla Companies
 CREATE TABLE Companies (
-company_id VARCHAR(15) NOT NULL,
+company_id VARCHAR(15),
 company_name VARCHAR(255),
 phone VARCHAR(15),
 email VARCHAR(150),
@@ -32,7 +32,7 @@ PRIMARY KEY (company_id)
 USE VentasBD; 
 -- creando tabla Credit_card
 CREATE TABLE Credit_cards (
-id VARCHAR(15) NOT NULL,
+id VARCHAR(15),
 user_id INT,
 iban VARCHAR(50),
 pan VARCHAR(19),
@@ -46,7 +46,7 @@ PRIMARY KEY (id)
 
 USE  VentasBD; 
 CREATE TABLE Transactions (
-id VARCHAR(255) NOT NULL ,
+id VARCHAR(255) ,
 card_id VARCHAR(15),
 company_id VARCHAR(15),
 timestamp timestamp,
@@ -112,6 +112,7 @@ FROM d_users;
 SELECT *
 FROM transactions;
 
+#NOTA:hice los cambios de los llamamientos. 
 #EJERCICIO 1
 # Realiza una subconsulta que muestre a todos los usuarios con más de 80 transacciones utilizando al menos 2 tablas.
 
@@ -125,12 +126,12 @@ HAVING CantidaddeTransacciones > 80;
 #Ejercicio 2
 #Muestra la media de amount por IBAN de las tarjetas de crédito en la compañía Donec Ltd., utiliza por lo menos 2 tablas.
 
-SELECT iban, ROUND(AVG(amount), 2) as MediaMonto
+SELECT credit_cards.iban, ROUND(AVG(transactions.amount), 2) as MediaMonto
 FROM transactions
 JOIN credit_cards
 ON credit_cards.id = transactions.card_id
 JOIN companies
 ON companies.company_id = transactions.company_id
-WHERE company_name = "Donec Ltd"
-GROUP BY iban
+WHERE companies.company_name = "Donec Ltd"
+GROUP BY credit_cards.iban
 ORDER BY MediaMonto DESC;
